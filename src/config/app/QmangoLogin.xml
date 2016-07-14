@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+<QmangoLoginBean>
+	<loginUri>/usershare/mango/regUser.asp</loginUri>
+	<getInfo>/usershare/mango/getUserInfo.asp</getInfo>
+	<membership>70000012</membership>
+	<host>10.10.222.81</host>
+	<key>ddd</key>
+</QmangoLoginBean>
+</config>

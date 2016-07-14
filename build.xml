@@ -1,0 +1,91 @@
+<project name="build-thirdpart-login">
+	<property name="lib.dir" value="../ThirdpartService/lib"></property>
+	<property name="web.dir" value="${basedir}/WebRoot"></property>
+	<property name="build.dir" value="${web.dir}/WEB-INF/classes"></property>
+	<property name="app.src" value="../ThirdpartService/src"></property>
+	<property name="thirdparty.src" value="${basedir}/src"></property>
+	<property name="tomcat.dir" value="C:\tomcat-5.5.23\webapps"></property>
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"></delete>
+	</target>
+	<target name="build">
+		<echo>Begin mkdir ${build.dir}</echo>
+		<mkdir dir="${build.dir}"/>
+		
+		<echo>Begin build ThirdpartService app.</echo>
+		<javac destdir="${build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true"  encoding="utf-8">
+			<src path="${app.src}"></src>
+			<classpath refid="master-classpath"></classpath>
+			<classpath>
+				<fileset dir="${build.dir}">
+					<include name="**/**/*.class"/>
+				</fileset>
+		</classpath>
+		</javac>
+		<echo>Begin build third party login!!</echo>
+		<javac destdir="${build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true" encoding="utf-8">
+			<src path="${thirdparty.src}"></src>
+			<classpath refid="master-classpath"></classpath>
+					<classpath>
+						<fileset dir="${build.dir}">
+							<include name="**/**/*.class"/>
+						</fileset>
+					</classpath>
+		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${thirdparty.src}">
+				<include name="**/**/*.xml"/>
+				<include name="**/**/*.properties"/>
+				<include name="*.properties"/>
+			</fileset>
+			<fileset dir="${app.src}">
+				<include name="**/**/*.xml"/>
+			</fileset>
+		</copy>
+		
+	</target>
+	
+	<target name="dist" depends="build">
+		<echo>Copy libs</echo>
+		<copy todir="${web.dir}/WEB-INF/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<war destfile="${basedir}/ThirdpartLogin.war" webxml="${web.dir}/WEB-INF/web.xml">
+			<fileset dir="${web.dir}">
+			</fileset>
+		</war>
+	</target>
+	<target name="deploy-to-tomcat" depends="dist">
+		<copy todir="${tomcat.dir}">
+			<fileset dir="${basedir}">
+				<include name="ThirdpartLogin.war"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="test-bind">
+		<copy todir="${tomcat.dir}/ROOT">
+			<fileset dir="${web.dir}/WEB-INF/jsp">
+				<include name="bind.jsp"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="test-js">
+		<copy todir="${tomcat.dir}/ROOT/js">
+			<fileset dir="${web.dir}/js">
+				<include name="*.js"/>
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

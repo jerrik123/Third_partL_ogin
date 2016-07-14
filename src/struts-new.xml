@@ -1,0 +1,82 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+
+<struts>
+	<!-- 新的配置文件都是以_new结尾 -->
+	<package name="verify_new" namespace="/tencent_new" extends="tencent-default">
+		<action name="login" class="tencentVerifyActionNew" method="login">
+			<result name="success" type="redirect">${loginUrl}</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		
+		<action name="getRejump" class="tencentVerifyActionNew" method="getRejump">
+		    <result name="register">/jsp_new/tencent_new.jsp</result>
+		    <result name="success">/index.jsp</result>
+		    <result name="Tencent_zhonggan" type="redirect">${toPageUrl}</result>
+		    <result name="error">/error.jsp</result>
+		</action>
+		
+		<action name="verify" class="tencentVerifyActionNew" method="verify">
+			<result name="error">/login.jsp</result>
+		</action>
+		<action name="logout" class="tencentVerifyActionNew" method="logout">
+			<result name="error">/error.jsp</result>
+			<result name="success" type="redirect">http://www.mangocity.com</result>
+		</action>
+		
+		<action name="getUserInfo" class="tencentVerifyActionNew" method="getUserInfo">
+			<result name="error" type="redirect">/login.jsp</result>
+			<result name="success">/jsp/tencent/register.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="register_new" namespace="/tencent_new" extends="tencent-default">
+		<action name="register" class="tencentRegisterActionNew" method="register">
+			<result name="register_success">/jsp_new/reg_success.jsp</result>
+			<result name="bind_success" type="redirect">http://www.mangocity.com</result>
+			<result name="param_error" type="redirect">/jsp/tencent/param_error.jsp</result>
+			<result name="error">/jsp_new/tencent_new.jsp</result>
+			<result name="success" type="redirect">http://www.mangocity.com/</result>
+			<result name="main">http://www.mangocity.com</result>
+		</action>
+	</package>
+
+	
+	
+	<!-- alipay --> 
+	<package name="alipay_new" namespace="/alipay_new" extends="struts-default">
+		<action name="linkAlipay" class="AlipayCGIActionNew" method="linkAlipay">
+		</action>
+		<action name="cgi" class="AlipayCGIActionNew" method="cgi">
+			<result type="redirect">${rederictURL}</result>
+		</action>
+	
+	
+	  <action name="login" class="AlipayLoginActionNew" method="alipayLogin">
+	  	<result name="succ" type="redirect">${rederictURL}</result> 
+	  </action>
+	  <action name="deallogin" class="AlipayLoginActionNew" method="dealLogin" /> 
+	  <action name="derectLogin" class="AlipayLoginActionNew" method="mbrDerectLogin">
+	  	<result name="loginfail" type="dispatcher">bind.jsp</result> 
+	  	<result name="loginsucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  </action>
+	  <action name="mbrlogin" class="AlipayLoginActionNew" method="mbrlogin">
+	  	<result name="login" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  </action>
+	  <action name="registerBand" class="AlipayLoginActionNew" method="mbrRegisterBand">
+	  	<result name="registsucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  	<result name="registfail" type="dispatcher">bind.jsp</result> 
+	  </action>
+	  <action name="loginBand" class="AlipayLoginActionNew" method="mbrLoginBand">
+	  	<result name="loginsucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  	<result name="loginfail" type="dispatcher">bind.jsp</result> 
+	  </action>
+	  <action name="dealQuery" class="AlipayLoginActionNew" method="dealQuery">
+	  	<result name="querysucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  	<result name="queryfail" type="dispatcher">bind.jsp</result> 
+	  </action>
+	 </package>
+	
+</struts>

@@ -1,0 +1,192 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+
+<struts>
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.action.extension" value="action" />
+	<constant name="objectFactory" value="spring"></constant>
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- <constant name="struts.locale" value="zh_CN" /> -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<!--<constant
+		name="struts.configuration.classpath.disableActionScanning"
+		value="false" />-->
+	<constant name="struts.custom.i18n.resources"
+		value="config.international.uiLabel,config.international.uiLabelPage,config.international.error,config.international.msg" />
+	<include file="struts-default.xml" />
+
+	<!-- interceptors -->
+	<package name="tencent-default" extends="struts-default">
+		<interceptors>
+			<interceptor-stack name="myDefaultStack">
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+
+		</interceptors>
+		<default-interceptor-ref name="myDefaultStack" />
+		<global-results>
+			<result name="input">/jsp/common/error.jsp</result>
+			<result name="success">/jsp/common/message.jsp</result>
+			<result name="result">/index.jsp</result>
+		</global-results>
+	</package>
+	
+	<!-- Tencent Verify Operate--> 
+	<package name="verify" namespace="/tencent" extends="tencent-default">
+		<action name="login" class="tencentVerifyAction" method="login">
+			<result name="success" type="redirect">${loginUrl}</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		
+		<action name="getRejump" class="tencentVerifyAction" method="getRejump">
+		    <result name="register">/jsp/bind.jsp</result>
+		    <result name="success">/index.jsp</result>
+		    <result name="Tencent_zhonggan" type="redirect">${toPageUrl}</result>
+		    <result name="error">/error.jsp</result>
+		</action>
+		
+		<action name="verify" class="tencentVerifyAction" method="verify">
+			<result name="error">/login.jsp</result>
+		</action>
+		<action name="logout" class="tencentVerifyAction" method="logout">
+			<result name="error">/error.jsp</result>
+			<result name="success" type="redirect">http://www.mangocity.com</result>
+		</action>
+		
+		<action name="getUserInfo" class="tencentVerifyAction" method="getUserInfo">
+			<result name="error" type="redirect">/login.jsp</result>
+			<result name="success">/jsp/tencent/register.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="register" namespace="/tencent" extends="tencent-default">
+		<action name="register" class="tencentRegisterAction" method="register">
+			<result name="register_success">/jsp/reg_success.jsp</result>
+			<result name="bind_success">/jsp/bind_success.jsp</result>
+			<result name="param_error" type="redirect">/jsp/tencent/param_error.jsp</result>
+			<result name="error">/jsp/bind.jsp</result>
+			<result name="success" type="redirect">http://www.mangocity.com/</result>
+			<result name="main">http://www.mangocity.com</result>
+		</action>
+	</package>
+
+	
+	
+	<!--qmango-->
+	<package name="qmangoOut" namespace="/qmango" extends="tencent-default">
+		<action name="qverify" class="qmangoVerifyAction" method="outSite">
+			<result name="success" type="redirect">http://www.qmango.com/usershare/mango/regUser.asp?uid=${mangocsn}&amp;key=${key}&amp;scd=${mbrshipcategorycd}</result>
+		</action>
+	</package>
+	
+	<package name="qmangoIn" namespace="/qmango" extends="tencent-default">
+		<action name="insite" class="qmangoVerifyAction" method="inSite">
+			<result name="error" type="redirect">http://www.mangocity.com/</result>
+			<result name="success" type="redirect">http://www.mangocity.com/</result>
+		</action>
+	</package>
+
+	<package name="qmangoGet" namespace="/qmango" extends="json-default">
+		<action name="getUserInfo" class="qmangoVerifyAction" method="getMemberInfo">
+			<result name="vjson" type="json"></result>
+			<result name="error" type="redirect">http://www.mangocity.com/</result>
+		</action>
+	</package>
+	
+	
+	<!-- QQcaibei --> 
+	<package name="caibei" namespace="/caibei" extends="json-default">
+		<action name="caibeicgi" class="CaibeiVerifyAction" method="caibeicgi">
+			<result name="homepage" type="redirect">http://www.mangocity.com</result>
+			<result name="redirectCB">/jsp/thirdredirect.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 51fanli -->
+	<package name="fanli" namespace="/fanli" extends="tencent-default">
+		<action name="fanliverify" class="FanliVerifyAction" method="init">
+			<result name="success" type="redirect">http://www.mangocity.com</result>
+			<result name="error" type="redirect">http://www.mangocity.com</result>
+			<result name="page">/jsp/thirdredirect.jsp</result>
+		</action>
+	</package>
+	
+	<!-- alipay --> 
+	<package name="alipay" namespace="/alipay" extends="struts-default">
+		<action name="linkAlipay" class="AlipayCGIAction" method="linkAlipay">
+		</action>
+		<action name="cgi" class="AlipayCGIAction" method="cgi">
+			<result type="redirect">${rederictURL}</result>
+		</action>
+	
+	
+	  <action name="login" class="AlipayLoginAction" method="alipayLogin">
+	  	<result name="succ" type="redirect">${rederictURL}</result> 
+	  </action>
+	  <action name="deallogin" class="AlipayLoginAction" method="dealLogin" /> 
+	  <action name="derectLogin" class="AlipayLoginAction" method="mbrDerectLogin">
+	  	<result name="loginfail" type="dispatcher">bind.jsp</result> 
+	  	<result name="loginsucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  </action>
+	  <action name="mbrlogin" class="AlipayLoginAction" method="mbrlogin">
+	  	<result name="login" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  </action>
+	  <action name="registerBand" class="AlipayLoginAction" method="mbrRegisterBand">
+	  	<result name="registsucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  	<result name="registfail" type="dispatcher">bind.jsp</result> 
+	  </action>
+	  <action name="loginBand" class="AlipayLoginAction" method="mbrLoginBand">
+	  	<result name="loginsucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  	<result name="loginfail" type="dispatcher">bind.jsp</result> 
+	  </action>
+	  <action name="dealQuery" class="AlipayLoginAction" method="dealQuery">
+	  	<result name="querysucc" type="redirect">http://www.mangocity.com/promotion/h111118zhifubao.html</result> 
+	  	<result name="queryfail" type="dispatcher">bind.jsp</result> 
+	  </action>
+	 </package>
+	
+	<!-- youbang -->
+	<package name="youbanginit" namespace="/youbanginit" extends="struts-default">
+		<action name="youbangInit" class="com.mangocity.thirdparty.login.action.youbang.YoubangRecordAction" method="initYoubang">
+			<result name="success">/jsp/youbangPage.jsp</result>
+		</action>
+		<action name="youbangNew" class="com.mangocity.thirdparty.login.action.youbang.YouBangNewAction" method="initYoubang">
+			<result name="success">/jsp/youbangNewPage.jsp</result>
+		</action>
+	</package>
+	
+	<package name="youbang" namespace="/youbang" extends="json-default">
+		<action name="youbangRegister" class="com.mangocity.thirdparty.login.action.youbang.YoubangRecordAction" method="recordYoubang">
+	  		<result type="json">
+				<param name="includeProperties">
+					result
+				</param>
+			</result>
+	  	</action>
+	  	<action name="youbangRecord" class="com.mangocity.thirdparty.login.action.youbang.YouBangNewAction" method="recordYoubang">
+	  		<result type="json">
+				<param name="includeProperties">
+					result
+				</param>
+			</result>
+	  	</action>
+	  	
+	</package>
+	
+	<!-- weixin -->
+	<package name="weixin" namespace="/weixin" extends="struts-default">
+		<action name="checkWeixinBinding" class="com.mangocity.thirdparty.login.action.weixin.WeixinBindingAction" 
+			method="checkWeixinBinding">
+		</action>
+		<action name="addWeixinBinding" class="com.mangocity.thirdparty.login.action.weixin.WeixinBindingAction"
+			method="addWeixinBinding" >
+		</action>
+		<action name="cancelWeixinBinding" class="com.mangocity.thirdparty.login.action.weixin.WeixinBindingAction"
+			method="cancelWeixinBinding" >
+		</action>
+	</package>
+	<!-- 包含新的配置文件 -->
+	<include file="struts-new.xml"></include>
+</struts>

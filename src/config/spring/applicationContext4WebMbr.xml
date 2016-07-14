@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:aop="http://www.springframework.org/schema/aop" 
+       xmlns:tx="http://www.springframework.org/schema/tx" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd 
+                           http://www.springframework.org/schema/tx 
+                           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+	<!-- prod -->
+    <bean id="rmiFactory" class="com.mangocity.util.ExtServiceClientRmiFactory">
+    	<constructor-arg value="config/ServiceClientConfig.xml" />
+    	<!-- <constructor-arg value="{mbr_ejb.java.naming.provider.url}" />
+    	<constructor-arg value="{mbr_ejb.java.naming.jndi.bind.name}" /> -->
+    	<constructor-arg value="corbaloc::uat03:10004,:uat04:10004/NameServiceServerRoot"></constructor-arg>
+    	<constructor-arg value="cell/clusters/c09/ejb/MbrServiceEJB"></constructor-arg>
+    </bean>
+	<!-- local
+	<bean id="rmiFactory"
+		class="org.mangocube.corenut.scm.stub.ServiceClientRmiFactory">
+	</bean> -->
+	
+	<bean id="registerService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.mbr.IRegisterService</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="crmRegisterService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.crm.ICrmRegisterService</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mbrhisCateService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.mbrship.IMbrshipCategoryService</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mbrService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.mbr.IMbrService</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="personService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.person.IPersonService</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="wasconfigService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.mbrsys.IWasconfigService</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mbrshipCategoryService"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="rmiFactory" />
+		<property name="targetMethod" value="getService" />
+		<property name="arguments">
+			<list>
+				<value>com.mangocity.services.mbrship.IMbrshipCategoryService</value>
+			</list>
+		</property>
+	</bean>
+	<!-- mbrService end -->
+</beans>

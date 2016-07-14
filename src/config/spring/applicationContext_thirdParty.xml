@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:aop="http://www.springframework.org/schema/aop" 
+       xmlns:tx="http://www.springframework.org/schema/tx" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd 
+                           http://www.springframework.org/schema/tx 
+                           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd" 
+       default-autowire="byName">
+       
+    <!-- ===============================共用Member中的配置Begin============================== -->   
+    	<!-- 属性文件的加载 -->
+    	
+    	
+   <bean id="propertyConfigurer"
+		class="com.ctol.mango.pge.common.SpringPropertyConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config/SysConfig.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	 <!--	开发环境数据源-->
+	<bean id="dataSource_member"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<!-- <value>oracle.jdbc.OracleDriver</value> -->
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="url">
+			<!-- <value>jdbc:oracle:thin:@10.10.7.111:1521:hccdev</value> -->
+			<value>jdbc:oracle:thin:@10.10.5.18:1901:hkcts01</value>
+		</property>
+		<property name="username">
+			<!-- <value>mbrv3</value> -->
+			<value>mbr</value>
+		</property>
+		<property name="password">
+			<!-- <value>mbrv3</value> -->
+			<value>mbr</value>
+		</property>
+	</bean>
+	
+	
+		
+	<!-- 新MbrService接口连接器 -->
+	<bean id="httpMbrServerHelper" class="com.mangocity.thirdparty.login.utils.HTTPMbrServerHelper">
+	   <property name="mbrServerIp">
+            <value>${http.mbrservice.ip}</value>
+       </property>
+	   <property name="mbrServerPort">
+            <value>${http.mbrservice.port}</value>
+       </property>
+       <property name="mbrServerContext">
+            <value>${http.mbrservice.context}</value>
+       </property>       
+	</bean>
+	
+<!--	生产环境数据源
+	<bean id="dataSource_member" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${mbr.member.datasource}"/>
+	</bean>-->
+  
+  
+	<bean id="sessionFactory_member"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource_member" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">none</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.connection.useUnicode">true</prop>
+				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/mangocity/thirdpartservice/domain/tsintuser.hbm.xml</value>
+				<value>com/mangocity/thirdpartservice/domain/youbangRecordInfo.hbm.xml</value>
+				<value>com/mangocity/thirdpartservice/domain/youbangNewInfo.hbm.xml</value>
+				<value>com/mangocity/thirdpartservice/domain/weixinBindingRecord.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="transactionManager_member"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory_member" />
+		</property>
+	</bean>
+	<bean id="baseTransactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		lazy-init="true">
+		<property name="transactionManager"
+			ref="transactionManager_member" />
+		<property name="target">
+			<ref local="baseService" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="insert*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="edit*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="del*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="query*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="disPlay*">PROPAGATION_REQUIRES_NEW</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 父类dao 父类service -->
+	<bean id="baseDao"
+		class="com.mangocity.framework.base.dao.impl.HibernateDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory_member" />
+	</bean>
+
+	<bean id="baseService"
+		class="com.mangocity.framework.base.service.impl.BaseServiceImpl">
+		<property name="hibernateDao">
+			<ref local="baseDao" />
+		</property>
+	</bean>
+	<!--  ...模块Service Bean注入  begin  -->
+       
+    <!-- ==========第三方应用配置Begin========== -->
+	<!--QQ Action -->
+	<bean id="tencentVerifyAction" class="com.mangocity.thirdparty.login.action.tencent.TencentVerifyAction" scope="prototype">
+	    <property name="unionLogin" ref="tencentLogin"></property>
+	    <property name="registerService" ref="registerService"></property>
+	    <property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+	</bean>
+	
+	<bean id="tencentRegisterAction" class="com.mangocity.thirdparty.login.action.tencent.TencentRegisterAction" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerHelper" ref="registerHelper"></property>
+		<property name="registerService" ref="registerService"></property> 
+		<property name="crmRegisterService" ref="crmRegisterService"></property>
+	</bean>
+	
+	<bean id="registerHelper" class="com.mangocity.thirdparty.login.helper.impl.TencentRegisterHelper" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerService" ref="registerService"></property>
+		<property name="crmRegisterService" ref="crmRegisterService"></property>
+		<property name="mbrhisCateService" ref="mbrhisCateService"></property>
+	</bean>
+	
+	<!-- Qmango Action -->
+	<bean id="qmangoVerifyAction" class="com.mangocity.thirdparty.login.action.qmango.QmangoVerifyAction" scope="prototype">
+	    <property name="wasconfigService" ref="wasconfigService"></property>
+		<property name="mbrService" ref="mbrService"></property>
+		<property name="personService" ref="personService"></property>
+		<property name="mbrshipCategoryService" ref="mbrshipCategoryService"></property>
+	</bean>
+	
+	<bean id="qmangoRegisterHelper" class="com.mangocity.thirdparty.login.helper.impl.QmangoRegisterHelper" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerService" ref="registerService"></property>
+		<property name="crmRegisterService" ref="crmRegisterService"></property>
+		<property name="mbrhisCateService" ref="mbrhisCateService"></property>
+	</bean>
+	
+	<!-- qmango Chain of Responsibility  -->
+	<bean id="qmangoVerifyHandler" class="com.mangocity.thirdparty.login.helper.qmango.VerifyRequestHandler">
+		<property name="successHandler" ref="qmangoRemoteHandler"></property>
+	</bean>
+	<bean id="qmangoRemoteHandler" class="com.mangocity.thirdparty.login.helper.qmango.RemoteHandler">
+		<property name="unionLogin" ref="qmangoLogin"></property>
+		<property name="successHandler" ref="qmangoLoginHandler"></property>
+	</bean>
+	
+	<bean id="qmangoLoginHandler" class="com.mangocity.thirdparty.login.helper.qmango.LoginHandler" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerService" ref="registerService"></property>
+		<property name="successHandler" ref="qmangoBindHandler"></property>
+	</bean>
+	<bean id="qmangoBindHandler" class="com.mangocity.thirdparty.login.helper.qmango.BindHandler"  scope="prototype">
+		<property name="registerService" ref="registerService"></property>
+		<property name="registerHelper" ref="qmangoRegisterHelper"></property>
+		<property name="successHandler" ref="qmangoRegistHandler"></property>
+	</bean>
+	<bean id="qmangoRegistHandler" class="com.mangocity.thirdparty.login.helper.qmango.RegistHandler" scope="prototype">
+		<property name="registerHelper" ref="qmangoRegisterHelper"></property>
+	</bean>
+	<!-- end -->
+	
+	<!-- HttpClient -->
+	<bean id="getHttpClient" class="com.mangocity.mbr.unionlogin.http.GetHttpClient">	     
+	</bean>
+	
+	<bean id="postHttpClient" class="com.mangocity.mbr.unionlogin.http.PostHttpClient">	     
+	</bean>
+	
+	<!--qq xml -->
+	<bean id="tencentLogin" class="com.mangocity.mbr.unionlogin.qq.TencentLogin">
+	    <constructor-arg index="0">
+       		<value>config/app/Login.xml</value>
+   		</constructor-arg>
+		<property name="requestUrl" value="http://openid.qq.com"></property>
+		<property name="post" ref="postHttpClient"/>
+		<property name="get" ref="getHttpClient"/>
+	</bean>
+	
+	<!-- qm xml -->
+	<bean id="qmangoLogin" class="com.mangocity.mbr.unionlogin.qmango.QmangoLogin">
+	    <constructor-arg index="0">
+       		<value>config/app/QmangoLogin.xml</value>
+   		</constructor-arg>
+		<property name="post" ref="postHttpClient"/>
+	</bean>
+	
+	<!-- caibei -->
+	<bean id="CaibeiVerifyAction" class="com.mangocity.thirdparty.login.action.caibei.CaibeiVerifyAction" scope="prototype">
+		<property name="registerService" ref="registerService"></property>
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerHelper" ref="registerHelper"></property>
+	</bean>
+	
+	<!-- 51fanli -->
+	<bean id="FanliVerifyAction" class="com.mangocity.thirdparty.login.action.fanli.FanliVerifyAction" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerService" ref="registerService"></property>
+		<property name="fanliRegisterHelper" ref="fanliRegisterHelper"></property>
+		<property name="travelBusinessHelper" ref="travelBusinessHelper"></property>
+	</bean>
+	
+	<bean id="fanliRegisterHelper" class="com.mangocity.thirdparty.login.helper.impl.FanliRegisterHelper" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="crmRegisterService" ref="crmRegisterService"></property>
+		<property name="mbrhisCateService" ref="mbrhisCateService"></property>
+	</bean>
+	
+	<bean id="travelBusinessHelper" class="com.mangocity.thirdparty.login.helper.impl.TravelBusinessHelperImpl" scope="prototype">
+		<property name="mbrhisCateService" ref="mbrhisCateService"></property>
+	</bean>
+	
+	<!-- Target -->
+	<bean id="thirdPartyRegisterTarget" parent="baseService"
+		class="com.mangocity.thirdpartservice.service.impl.ThirdPartyRegisterServiceImpl">
+		<property name="thirdPartyRegisterDao">
+			<ref local="thirdPartyRegisterDao" />
+		</property>
+	</bean>
+	
+	<bean id="youbangRecordTarget" parent="baseService"
+		class="com.mangocity.thirdpartservice.service.impl.YoubangRecordServiceImpl">
+		<property name="youbangRecordDao">
+			<ref local="youbangRecordDao"/>
+		</property>
+	</bean>
+	
+	<bean id="youbangNewTarget" parent="baseService"
+		class="com.mangocity.thirdpartservice.service.impl.YoubangNewServiceImpl">
+		<property name="youbangNewDao">
+			<ref local="youbangNewDao"/>
+		</property>
+	</bean>
+	
+	<bean id="weixinBindingTarget" parent="baseService"
+		class="com.mangocity.thirdpartservice.service.impl.WeixinBindingServiceImpl">
+		<property name="weixinBindingDao">
+			<ref local="weixinBindingDao"/>
+		</property>
+	</bean>
+	
+	<!-- Template -->
+	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManager_member"></property>
+	</bean>
+	
+	<!-- Service -->
+	<bean id="thirdPartyRegisterService" parent="baseTransactionProxy">
+		<property name="target">
+			<ref local="thirdPartyRegisterTarget" />
+		</property>		
+	</bean>
+	
+	<bean id="youbangRecordService" parent="baseTransactionProxy">
+		<property name="target">
+			<ref local="youbangRecordTarget"/>
+		</property>
+	</bean>
+	
+	<bean id="youbangNewService" parent="baseTransactionProxy">
+		<property name="target">
+			<ref local="youbangNewTarget"/>
+		</property>
+	</bean>
+	
+	<bean id="weixinBindingService" parent="baseTransactionProxy">
+		<property name="target">
+			<ref local="weixinBindingTarget"/>
+		</property>
+	</bean>
+	
+	<!-- Dao -->
+	<bean id="thirdPartyRegisterDao" parent="baseDao"
+		class="com.mangocity.thirdpartservice.dao.impl.ThirdPartyRegisterDaoImpl">
+	</bean>
+	
+	<bean id="youbangRecordDao" parent="baseDao"
+		class="com.mangocity.thirdpartservice.dao.impl.YoubangRecordDaoImpl">	
+	</bean>
+	
+	<bean id="youbangNewDao" parent="baseDao"
+		class="com.mangocity.thirdpartservice.dao.impl.YoubangNewDaoImpl">	
+	</bean>
+	
+	<bean id="weixinBindingDao" parent="baseDao"
+		class="com.mangocity.thirdpartservice.dao.impl.WeixinBindingDaoImpl">
+	</bean>
+	
+	<!-- ===========第三方应用配置End=========== -->
+	<!--  alipay --> 
+    <bean id="AlipayLoginAction" class="com.mangocity.thirdparty.login.action.alipay.AlipayQuicklyLoginAction">
+  		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService" /> 
+  		<property name="registerService" ref="registerService" /> 
+  		<property name="crmRegisterService" ref="crmRegisterService" /> 
+  	</bean>
+    <bean id="AlipayCGIAction" class="com.mangocity.thirdparty.login.action.alipay.AlipayCGIAction">
+  		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService" /> 
+  		<property name="registerService" ref="registerService" /> 
+  		<property name="crmRegisterService" ref="crmRegisterService" /> 
+		<property name="mbrService" ref="mbrService" />
+		<property name="mbrhisCateService" ref="mbrhisCateService"></property>
+  	</bean>
+  	
+  	<!-- 修改后的内容2015-03-30 -->
+	<bean id="tencentVerifyActionNew" class="com.mangocity.thirdparty.login._new.action.tencent.TencentVerifyActionNew" scope="prototype">
+	    <property name="unionLogin" ref="tencentLogin"></property>
+	    <property name="registerService" ref="registerService"></property>
+	    <property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+	</bean>
+	
+	<bean id="tencentRegisterActionNew" class="com.mangocity.thirdparty.login._new.action.tencent.TencentRegisterActionNew" scope="prototype">
+		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService"></property>
+		<property name="registerHelper" ref="registerHelper"></property>
+		<property name="registerService" ref="registerService"></property> 
+		<property name="crmRegisterService" ref="crmRegisterService"></property>
+	</bean>
+	
+	<!--  alipay --> 
+    <bean id="AlipayLoginActionNew" class="com.mangocity.thirdparty.login._new.action.alipay.AlipayQuicklyLoginActionNew">
+  		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService" /> 
+  		<property name="registerService" ref="registerService" /> 
+  		<property name="crmRegisterService" ref="crmRegisterService" /> 
+  	</bean>
+  	
+    <bean id="AlipayCGIActionNew" class="com.mangocity.thirdparty.login._new.action.alipay.AlipayCGIActionNew">
+  		<property name="thirdPartyRegisterService" ref="thirdPartyRegisterService" /> 
+  		<property name="registerService" ref="registerService" /> 
+  		<property name="crmRegisterService" ref="crmRegisterService" /> 
+		<property name="mbrService" ref="mbrService" />
+		<property name="mbrhisCateService" ref="mbrhisCateService"></property>
+  	</bean>
+</beans>

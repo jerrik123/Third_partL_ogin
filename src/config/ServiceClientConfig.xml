@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service-client>
+    <context id="was">
+       <property>
+           <name>com.ibm.websphere.naming.name.syntax</name>
+           <value>jndi</value>
+       </property>
+
+       <property>
+           <name>com.ibm.websphere.naming.namespace.connection</name>
+           <value>lazy</value>
+       </property>
+
+       <property>
+           <name>com.ibm.websphere.naming.jndicache.cacheobject</name>
+           <value>populated</value>
+       </property>
+
+       <property>
+           <name>com.ibm.websphere.naming.namespaceroot</name>
+           <value>defaultroot</value>
+       </property>
+
+       <property>
+           <name>com.ibm.ws.naming.implementation</name>
+           <value>WsnIpCos</value>
+       </property>
+  <!-- prod -->
+       <property>
+           <name>com.ibm.ws.naming.wsn.factory.initial</name>
+           <value>com.ibm.ws.naming.util.WsnInitCtxFactory</value>
+       </property>
+  <!-- local 
+       <property>
+			<name>java.naming.factory.initial</name>
+			<value>com.ibm.websphere.naming.WsnInitialContextFactory</value>
+		</property>
+          -->
+       
+
+       <property>
+           <name>com.ibm.websphere.naming.jndicache.cachename</name>
+           <value>providerURL</value>
+       </property>
+
+       <property>
+           <name>java.naming.factory.url.pkgs</name>
+           <value>com.ibm.ws.runtime:com.ibm.ws.naming</value>
+       </property>
+
+       <property>
+           <name>org.omg.CORBA.ORBClass</name>
+           <value>com.ibm.CORBA.iiop.ORB</value>
+       </property>
+
+       <property>
+           <name>java.naming.provider.url</name>
+          <!-- <value>corbaloc:iiop:10.10.225.78:2810</value> -->  
+          <value>corbaloc::10.10.7.6:10004,:10.10.7.22:10004/NameServiceServerRoot</value>
+       </property>
+    </context>
+    <mapping ref-contxt="was">
+        <pattern>com/mangocity/**/*</pattern>
+        <!-- <jndi-bind>ejb/MbrServiceEJB</jndi-bind> -->
+        <jndi-bind>cell/clusters/c09/ejb/MbrServiceEJB</jndi-bind>
+    </mapping>
+    
+</service-client>	

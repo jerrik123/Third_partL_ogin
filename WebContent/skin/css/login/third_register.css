@@ -1,0 +1,205 @@
+body {
+  background-color: #fafafa;
+}
+.log_header {
+  width: 990px;
+  height: 73px;
+  margin: 10px auto 26px auto;
+  color: #666;
+}
+.log_header span {
+  float: left;
+  width: 1px;
+  height: 30px;
+  background: #e3e3e3;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 22px;
+}
+.log_header a {
+  float: left;
+  width: 129px;
+  height: 73px;
+}
+.log_header a h1 {
+  display: none;
+}
+.log_header a img {
+  width: 129px;
+  height: 73px;
+  border: 0;
+}
+.log_header h2 {
+  float: left;
+  display: block;
+  width: 200px;
+  font-size: 30px;
+  line-height: 74px;
+}
+.log_content {
+  width: 990px;
+  margin: 0 auto 180px auto;
+}
+.log_content .log_con_l {
+  float: right;
+  width: 300px;
+}
+.log_content .log_con_l img {
+  width: 300px;
+  height: 313px;
+}
+.log_content .log_con_r {
+  float: left;
+  width: 640px;
+  background-color: #EBEBEB;
+}
+.log_content .thirdparty {
+  width: 629px;
+  border: 1px solid #E0E0E0;
+  margin: 5px;
+  background-color: #fff;
+}
+.log_content .thirdparty .content {
+  float: left;
+  width: 389px;
+  margin: 15px 0;
+  background: url(../../img/login/lineshu.png) top right repeat-y;
+}
+.log_content .thirdparty .con1 {
+  width: 100%;
+  height: 77px;
+  line-height: 77px;
+  font-size: 18px;
+  text-align: center;
+  color: #333;
+}
+.log_content .thirdparty .con4 {
+  margin-left: 28px;
+}
+.log_content .thirdparty .con5 {
+  height: 46px;
+  line-height: 40px;
+  padding-left: 93px;
+}
+.log_content .thirdparty .form_line {
+  padding-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.log_content .thirdparty .form_line label {
+  float: left;
+  width: 65px;
+  height: 34px;
+  line-height: 34px;
+  font-size: 16px;
+  color: #333;
+}
+.log_content .thirdparty .form_line input {
+  float: left;
+  width: 220px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #CDCDCD;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.log_content .thirdparty .form_line input:focus {
+  border-color: #FD6B08;
+  color: #000;
+}
+.log_content .thirdparty .form_line .xx {
+  position: absolute;
+  top: 11px;
+  right: 60px;
+  width: 15px;
+  height: 15px;
+  background: url(../../img/login/reset.png) right bottom no-repeat;
+  cursor: pointer;
+}
+.log_content .thirdparty .form_line .tishi {
+  display: none;
+}
+.log_content .thirdparty .form_line .error {
+  width: 220px;
+  height: 20px;
+  line-height: 20px;
+  margin-left: 65px;
+  margin-bottom: -10px;
+  padding-left: 20px;
+  border: 1px solid #FFBDBF;
+  background-color: #FFEBEC;
+  color: #FF0101;
+  overflow: hidden;
+}
+.log_content .thirdparty .yan input {
+  width: 90px;
+}
+.log_content .thirdparty .yan img {
+  float: left;
+  height: 20px;
+  margin: 7px 10px;
+  width: 70px;
+}
+.log_content .thirdparty .yan a {
+  display: block;
+  float: left;
+  color: #0054a9;
+  text-decoration: none;
+  margin-top: 7px;
+}
+.log_content .thirdparty .automatic_login {
+  padding-left: 65px;
+}
+.log_content .thirdparty .automatic_login .subt {
+  float: left;
+  width: 160px;
+  line-height: 34px;
+  background-color: #FF9900;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  border: none ;
+  border-radius: 2px;
+  margin-left: 0;
+  font-family: "Microsoft YaHei", simsun, tahoma, sans-serif;
+}
+.log_content .thirdparty .automatic_login a {
+  float: left;
+  width: 65px;
+  line-height: 34px;
+  text-decoration: none;
+  color: #0055aa;
+  margin-left: 25px;
+}
+.log_content .thirdparty .automatic_login a:hover {
+  color: #0055aa;
+}
+.log_content .thirdparty .con_r {
+  float: right;
+  width: 240px;
+}
+.log_content .thirdparty .binding {
+  width: 160px;
+  height: 34px;
+  line-height: 34px;
+  border: 1px solid #D3D3D3;
+  margin: 0 auto;
+  margin-top: 159px;
+  text-align: center;
+  color: #656565;
+  background-color: #F5F5F5;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.log_content .thirdparty .binding:hover {
+  border: 1px solid #FF6600;
+  color: #fff;
+  background-color: #FF6600;
+}
+.log_content .thirdparty .binding .binding _on {
+  border: 1px solid #FF6600;
+  color: #fff;
+  background-color: #FF6600;
+}

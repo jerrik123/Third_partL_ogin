@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.mangocity.thirdpartservice.domain.YoubangRecordInfo" table="T_MBR_THIRD_YOUBANG_INFO">
+		<id name="id" type="java.lang.Long" column="ID">
+			<generator class="sequence">
+				<param name="sequence">seq_youbang_info</param>
+			</generator>
+		</id>
+		<property name="mobileNo" column="MOBILE_NO" type="string" not-null="true"/>
+		<property name="userName" column="USER_NAME" type="string" not-null="true"></property>
+		<property name="area" column="AREA" type="string"></property>
+		<property name="birthday" column="BIRTHDAY" type="string"></property>
+		<property name="createBy" column="CREATE_BY" type="string" not-null="true"></property>
+		<property name="updateBy" column="UPDATE_BY" type="string"></property>
+		<property name="createTime" column="CREATE_TIME" type="timestamp"></property>
+		<property name="updateTime" column="UPDATE_TIME" type="timestamp"></property>
+	</class>
+</hibernate-mapping>

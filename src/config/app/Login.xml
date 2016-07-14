@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <TencentLoginBean>
+  <url>http://openapi.qzone.qq.com/oauth/qzoneoauth_authorize</url>
+  <oauth_callback>http://www.mangocity.com/ThirdPartyLogin/tencent/getRejump.action</oauth_callback>
+  <oauth_version>1.0</oauth_version>
+  <oauth_signature_method>HMAC-SHA1</oauth_signature_method>
+  <oauth_consumer_key>205324</oauth_consumer_key>
+  <key>f15c6c5ce923e64c2cfd7f18cffd464b</key>
+  </TencentLoginBean>
+  
+  <TencentVerifyBean>
+    <url>http://openapi.qzone.qq.com/oauth/qzoneoauth_request_token</url>
+  	<oauth_version>1.0</oauth_version>
+  	<oauth_signature_method>HMAC-SHA1</oauth_signature_method>
+  	<oauth_consumer_key>205324</oauth_consumer_key>
+ 	<key>f15c6c5ce923e64c2cfd7f18cffd464b</key>
+  </TencentVerifyBean>
+  
+  <TencentLogoutBean>
+    <url>http://openapi.qzone.qq.com/user/logout_connect</url>
+    <oauth_version>1.0</oauth_version>
+  	<oauth_signature_method>HMAC-SHA1</oauth_signature_method>
+  	<oauth_consumer_key>205324</oauth_consumer_key>
+ 	<key>f15c6c5ce923e64c2cfd7f18cffd464b</key>
+  </TencentLogoutBean>
+  
+  <TencentGetBean>
+    <url>http://openapi.qzone.qq.com/user/get_user_info</url>
+   	<oauth_version>1.0</oauth_version>
+  	<oauth_signature_method>HMAC-SHA1</oauth_signature_method>
+  	<oauth_consumer_key>205324</oauth_consumer_key>
+ 	<key>f15c6c5ce923e64c2cfd7f18cffd464b</key>
+  </TencentGetBean>
+  
+   <TencentAccessBean>
+    <url>http://openapi.qzone.qq.com/oauth/qzoneoauth_access_token</url>
+    <oauth_version>1.0</oauth_version>
+  	<oauth_signature_method>HMAC-SHA1</oauth_signature_method>
+  	<oauth_consumer_key>205324</oauth_consumer_key>
+ 	<key>f15c6c5ce923e64c2cfd7f18cffd464b</key>
+  </TencentAccessBean>
+  
+</config>
